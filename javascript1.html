@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Picker</title>
+</head>
+<style> 
+.container {
+    text-align: center;
+    padding: 20px 80px;
+}
+.color-box {
+    padding: 30px 80px;
+    border-radius: 5px;
+}
+</style>
+<body>
+    <div class="container">
+        <h1>Color Palette Picker</h1>
+        <div class="color-palette">
+            <div class="color-box" id="color-box">
+                <input type="color" id="color-picker" value="#3498db">
+                <button id="add-color-button">Add Color</button>
+            </div>
+            <div class="color-list" id="color-list"></div>
+        </div>
+        <button id="save-button">Save Palette</button>
+        <button id="load-button">Load Palette</button>
+    </div>
+    <script>
+        // Get references to the elements
+const colorBox = document.getElementById('color-box');
+const colorPicker = document.getElementById('color-picker');
+const colorList = document.getElementById('color-list');
+const addColorButton = document.getElementById('add-color-button');
+const saveButton = document.getElementById('save-button');
+const loadButton = document.getElementById('load-button');
+
+// Initialize an array to store colors
+let colors = ['#3498db'];
+
+// Function to update the color box background
+function updateColorBox() {
+    colorBox.style.backgroundColor = colors[colors.length -1];
+}
+
+// Function to add a color to the list
+function addColorToList(color) {
+    const colorItem = document.createElement('div');
+    colorItem.className = 'color-item';
+    colorItem.style.backgroundColor = color;
+    colorList.appendChild(colorItem);
+}
+
+// Function to save the current palette to local storage
+function savePalette() {
+    localStorage.setItem('colorPalette', JSON.stringify(colors));
+}
+
+// Function to load a saved palette from local storage
+function loadPalette() {
+    const savedPalette = localStorage.getItem('colorPalette');
+    if (savedPalette) {
+        colors = JSON.parse(savedPalette);
+        updateColorBox();
+        colorList.innerHTML = '';
+        colors.forEach((color) => {
+            addColorToList(color);
+        });
+    }
+}
+
+// Add initial color to the color list
+addColorToList(colors[0]);
+
+// Event listeners
+addColorButton.addEventListener('click', () => {
+    const newColor = colorPicker.value;
+    colors.push(newColor);
+    addColorToList(newColor);
+    updateColorBox();
+});
+
+saveButton.addEventListener('click', () => {
+    savePalette();
+    alert('Palette saved to local storage.');
+});
+
+loadButton.addEventListener('click', () => {
+    loadPalette();
+    alert('Palette loaded from local storage.');
+});
+    </script>
+</body>
+</html>
